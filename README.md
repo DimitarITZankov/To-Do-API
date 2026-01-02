@@ -1,4 +1,4 @@
-# 📝 To-Do API (Django REST Framework)
+# To-Do API (Django REST Framework)
 
 A secure and structured **To-Do REST API** built with **Django REST Framework** and **JWT authentication**.  
 The API allows users to create, manage, and view tasks, with proper access control and object-level permissions.
