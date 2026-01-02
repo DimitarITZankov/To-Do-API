@@ -9,7 +9,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class TasksViewSet(viewsets.ModelViewSet):
 	# Viewset for Tasks API
-	serializer_class = serializers.TasksSerializer
+	serializer_class = serializers.TasksDetailedSerializer
 	permission_classes = [IsAuthenticated, permissions.IsOwnerOrReadOnly]
 	authentication_classes = [JWTAuthentication,]
 	queryset = models.Tasks.objects.all()
@@ -22,9 +22,15 @@ class TasksViewSet(viewsets.ModelViewSet):
 		# Return only tasks what are with status PUBLIC
 		return self.queryset.filter(public=True).all()
 
+	def get_serializer_class(self):
+		# Return the right serializer based on the request
+		if self.action in ['list', 'create']:
+			return serializers.TasksSerializer
+		return serializers.TasksDetailedSerializer
+
 class MyTasksViewSet(mixins.RetrieveModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
 	# See only tasks that belong to the authenticated user
-	serializer_class = serializers.TasksSerializer
+	serializer_class = serializers.TasksDetailedSerializer
 	permission_classes = [IsAuthenticated,]
 	authentication_classes = [JWTAuthentication,]
 	queryset = models.Tasks.objects.all()
