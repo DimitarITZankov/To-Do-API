@@ -5,9 +5,11 @@ from django.shortcuts import render
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from rest_framework import generics, status
+from rest_framework import generics, status, mixins, viewsets
 
 from rest_framework.response import Response
+
+from rest_framework.permissions import IsAuthenticated
 
 from core import models
 from user import serializers, permissions
@@ -15,10 +17,24 @@ from user import serializers, permissions
 class RegisterViewSet(generics.CreateAPIView):
 	# Register API
 	serializer_class = serializers.RegisterSerializer
-	permission_clases = [permissions.IsNotAuthenticated,]
+	permission_classes = [permissions.IsNotAuthenticated,]
 
 	def create(self,request,*args,**kwargs):
 		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
 		return Response({"message":"User registered successfully"}, status=status.HTTP_201_CREATED)
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+	# User Profile API
+	serializer_class = serializers.RegisterSerializer
+	authentication_classes = [JWTAuthentication,]
+	permission_classes = [IsAuthenticated,]
+	queryset = models.User.objects.all()
+
+	# Allow only these HTTP methods
+	http_method_names = ['get', 'put', 'patch']
+
+	# Return only the logged-in user
+	def get_queryset(self):
+		return self.queryset.filter(pk=self.request.user.pk) # Primary key
