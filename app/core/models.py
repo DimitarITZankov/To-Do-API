@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
+from django.conf import settings
 
 class CustomUserManager(BaseUserManager):
 	# Create custom base user manager
@@ -44,3 +45,25 @@ class User(AbstractBaseUser,PermissionsMixin):
 		return self.name
 	def __str__(self):
 		return self.username
+
+
+class Tasks(models.Model):
+	# Create tasks model
+	class Priority(models.TextChoices):
+		LOW = 'low', 'Low'
+		MEDIUM = 'medium', 'Medium'
+		HIGH = 'high', 'High'
+	title = models.CharField(max_length=100,null=False,blank=False)
+	description = models.CharField(max_length=500)
+	completed = models.BooleanField(default=False)
+	priority = models.CharField(
+		max_length=10,
+		choices=Priority.choices,
+		default=Priority.MEDIUM
+	)
+	public = models.BooleanField(default=True)
+	due_date = models.DateField(null=True, blank=True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.title
