@@ -19,6 +19,9 @@ urlpatterns = [
 	# Register Endpoint
 	path('register/', views.RegisterViewSet.as_view(),name='register'),
 
+	# Change Password Endpoint
+	path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
+
 	# Router Endpoints
 	path('', include(router.urls)),
 ]

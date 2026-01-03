@@ -12,7 +12,7 @@ class TasksSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = models.Tasks
-        fields = ('id', 'title', 'description', 'priority', 'public', 'user')
+        fields = ('id', 'title', 'description', 'priority', 'user')
         read_only_fields = ('id', 'user')
         extra_kwargs = {
             'priority': {'required': True},
