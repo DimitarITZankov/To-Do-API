@@ -51,7 +51,7 @@ class TasksViewSet(viewsets.ModelViewSet):
 		serializer = self.get_serializer(task)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
-class MyTasksViewSet(mixins.RetrieveModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
+class MyTasksViewSet(mixins.DestroyModelMixin,mixins.UpdateModelMixin,mixins.RetrieveModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
 	# See only tasks that belong to the authenticated user
 	serializer_class = serializers.TasksDetailedSerializer
 	permission_classes = [IsAuthenticated,]
